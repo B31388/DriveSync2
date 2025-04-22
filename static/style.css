@@ -1,0 +1,23 @@
+body {
+    background-color: #f8f9fa;
+}
+.navbar {
+    background-color: #1877F2 !important;
+}
+.btn-primary {
+    background-color: #1877F2;
+    border-color: #1877F2;
+}
+.btn-primary:hover {
+    background-color: #145dbf;
+    border-color: #145dbf;
+}
+.alert {
+    margin-bottom: 1rem;
+}
+.container {
+    max-width: 800px;
+}
+h2 {
+    color: #1877F2;
+}

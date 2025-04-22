@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+    <h1 class="text-3xl font-bold mb-6">Admin Dashboard</h1>
+    
+    <!-- Add Account -->
+    <div class="card mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Add Account</h2>
+        <form method="POST" action="{{ url_for('core.add_account') }}">
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Account Type</label>
+                <select name="account_type" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" required>
+                    <option value="admin">Admin</option>
+                    <option value="driver">Driver</option>
+                    <option value="client">Client</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Name</label>
+                <input type="text" name="name" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Contact</label>
+                <input type="text" name="contact" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" placeholder="+256123456789" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Email</label>
+                <input type="email" name="email" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" required>
+            </div>
+            <button type="submit" class="btn">Add Account</button>
+        </form>
+    </div>
+
+    <!-- Add Vehicle -->
+    <div class="card mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Add Vehicle</h2>
+        <form method="POST" action="{{ url_for('core.add_vehicle') }}">
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Registration Number</label>
+                <input type="text" name="registration_number" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Vehicle Type</label>
+                <input type="text" name="vehicle_type" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Fuel per KM</label>
+                <input type="number" step="0.01" name="fuel_per_km" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" required>
+            </div>
+            <button type="submit" class="btn">Add Vehicle</button>
+        </form>
+    </div>
+
+    <!-- Assign Vehicle -->
+    <div class="card mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Assign Vehicle</h2>
+        <form method="POST" action="{{ url_for('core.assign_vehicle') }}">
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Driver Name</label>
+                <input type="text" name="driver_name" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Registration Number</label>
+                <input type="text" name="registration_number" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" required>
+            </div>
+            <button type="submit" class="btn">Assign Vehicle</button>
+        </form>
+    </div>
+
+    <!-- Process Request -->
+    <div class="card mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Process Request</h2>
+        <form method="POST" action="{{ url_for('core.process_request') }}">
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Request ID</label>
+                <input type="text" name="request_id" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Driver Name</label>
+                <input type="text" name="driver_name" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium"><input type="checkbox" name="spans_night"> Spans Night</label>
+            </div>
+            <button type="submit" class="btn">Process Request</button>
+        </form>
+    </div>
+
+    <!-- Accounts -->
+    <div class="card mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Accounts</h2>
+        <h3 class="text-xl font-semibold mb-2">Admins</h3>
+        <ul class="list-disc pl-5">
+            {% for admin in accounts.admins %}
+                <li>{{ admin.name }} - {{ admin.email }}</li>
+            {% endfor %}
+        </ul>
+        <h3 class="text-xl font-semibold mb-2 mt-4">Drivers</h3>
+        <ul class="list-disc pl-5">
+            {% for driver in accounts.drivers %}
+                <li>{{ driver.name }} - Vehicle: {{ driver.vehicle }} - Trips: {{ driver.trip_count }}</li>
+            {% endfor %}
+        </ul>
+        <h3 class="text-xl font-semibold mb-2 mt-4">Clients</h3>
+        <ul class="list-disc pl-5">
+            {% for client in accounts.clients %}
+                <li>{{ client.name }} - Trips: {{ client.trip_count }} - Total Cost: {{ client.total_trip_cost }} UGX</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Vehicles -->
+    <div class="card mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Vehicles</h2>
+        <ul class="list-disc pl-5">
+            {% for vehicle in vehicles %}
+                <li>{{ vehicle.registration_number }} - {{ vehicle.vehicle_type }} - Driver: {{ vehicle.assigned_driver }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Requests -->
+    <div class="card mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Requests</h2>
+        <ul class="list-disc pl-5">
+            {% for req in requests %}
+                <li>ID: {{ req.request_id }} - Client: {{ req.client }} - Goods: {{ req.goods_description }} - Pickup: {{ req.pickup_district }} - Dropoff: {{ req.dropoff_district }} - Status: {{ req.status }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Trips -->
+    <div class="card">
+        <h2 class="text-2xl font-semibold mb-4">Trips</h2>
+        <ul class="list-disc pl-5">
+            {% for trip in trips %}
+                <li>ID: {{ trip.request_id }} - Driver: {{ trip.driver }} - Pickup: {{ trip.start_district }} - Dropoff: {{ trip.end_district }} - Distance: {{ trip.distance }} km - Cost: {{ trip.total_cost }} UGX - Status: {{ trip.status }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

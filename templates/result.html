@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriveSync - Request Result</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/flatly/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('core.index') }}">DriveSync</a>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <h2>Request Result</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% if result %}
+            <h4>Confirmation</h4>
+            <p>{{ result.confirmation }}</p>
+            {% if result.request %}
+                <h4>Request Details</h4>
+                <ul>
+                    <li>Request ID: {{ result.request.request_id }}</li>
+                    <li>Client: {{ result.request.client }}</li>
+                    <li>Goods: {{ result.request.goods_description }}</li>
+                    <li>Status: {{ result.request.status }}</li>
+                </ul>
+            {% endif %}
+            {% if result.trip %}
+                <h4>Trip Details</h4>
+                <ul>
+                    <li>Driver: {{ result.trip.driver }}</li>
+                    <li>Distance: {{ result.trip.distance }} km</li>
+                    <li>Fuel per KM: {{ result.trip.fuel_per_km }} liters/km</li>
+                    <li>Fuel Price: {{ result.trip.fuel_price }} UGX/liter</li>
+                    <li>Total Cost: {{ result.trip.total_cost }} UGX</li>
+                    <li>Spans Night: {{ result.trip.spans_night }}</li>
+                </ul>
+            {% endif %}
+        {% endif %}
+        <a href="{{ url_for('core.index') }}" class="btn btn-primary">Back to Home</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

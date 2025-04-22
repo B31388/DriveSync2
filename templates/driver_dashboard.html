@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Driver Dashboard{% endblock %}
+{% block content %}
+    <h1 class="text-3xl font-bold mb-6">Driver Dashboard: {{ driver.name }}</h1>
+    
+    <div class="card mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Driver Details</h2>
+        <p><strong>Contact:</strong> {{ driver.contact }}</p>
+        <p><strong>Email:</strong> {{ driver.email }}</p>
+        <p><strong>Vehicle:</strong> {{ driver.vehicle }}</p>
+        <p><strong>Total Trips:</strong> {{ driver.trip_count }}</p>
+        <p><strong>Total Allowance:</strong> {{ driver.total_allowance }} UGX</p>
+    </div>
+
+    <div class="card">
+        <h2 class="text-2xl font-semibold mb-4">Trips</h2>
+        <ul class="list-disc pl-5">
+            {% for trip in trips %}
+                <li>
+                    ID: {{ trip.request_id }} - Distance: {{ trip.distance }} km - Cost: {{ trip.total_cost }} UGX - Status: {{ trip.status }}
+                    {% if trip.status == 'Assigned' %}
+                        <form method="POST" action="{{ url_for('core.start_trip') }}" class="inline">
+                            <input type="hidden" name="driver_name" value="{{ driver.name }}">
+                            <input type="hidden" name="request_id" value="{{ trip.request_id }}">
+                            <button type="submit" class="btn ml-2">Start Trip</button>
+                        </form>
+                    {% elif trip.status == 'Started' %}
+                        <form method="POST" action="{{ url_for('core.stop_trip') }}" class="inline">
+                            <input type="hidden" name="driver_name" value="{{ driver.name }}">
+                            <input type="hidden" name="request_id" value="{{ trip.request_id }}">
+                            <button type="submit" class="btn ml-2">Stop Trip</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

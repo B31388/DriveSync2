@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Add Account{% endblock %}
+{% block content %}
+    <div class="card max-w-md mx-auto">
+        <h2 class="text-2xl font-semibold mb-4">Add Account</h2>
+        <form method="POST" action="{{ url_for('core.add_account') }}">
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Account Type</label>
+                <select name="account_type" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" required>
+                    <option value="admin">Admin</option>
+                    <option value="driver">Driver</option>
+                    <option value="client">Client</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Name</label>
+                <input type="text" name="name" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Contact</label>
+                <input type="text" name="contact" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" placeholder="+256123456789" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium">Email</label>
+                <input type="email" name="email" class="mt-1 p-2 w-full bg-gray-800 text-white rounded" required>
+            </div>
+            <button type="submit" class="btn w-full">Add Account</button>
+        </form>
+    </div>
+{% endblock %}

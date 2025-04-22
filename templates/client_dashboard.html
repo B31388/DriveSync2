@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Client Dashboard{% endblock %}
+{% block content %}
+    <h1 class="text-3xl font-bold mb-6">Client Dashboard: {{ client.name }}</h1>
+    
+    <div class="card mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Client Details</h2>
+        <p><strong>Client Number:</strong> {{ client.client_number }}</p>
+        <p><strong>Contact:</strong> {{ client.contact }}</p>
+        <p><strong>Email:</strong> {{ client.email }}</p>
+        <p><strong>Total Trips:</strong> {{ client.trip_count }}</p>
+        <p><strong>Total Cost:</strong> {{ client.total_trip_cost }} UGX</p>
+        <a href="{{ url_for('core.client_request') }}" class="btn mt-4">Submit New Request</a>
+    </div>
+
+    <div class="card mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Requests</h2>
+        <ul class="list-disc pl-5">
+            {% for req in requests %}
+                <li>ID: {{ req.request_id }} - Goods: {{ req.goods_description }} - Pickup: {{ req.pickup_district }} - Dropoff: {{ req.dropoff_district }} - Status: {{ req.status }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2 class="text-2xl font-semibold mb-4">Trips</h2>
+        <ul class="list-disc pl-5">
+            {% for trip in trips %}
+                <li>ID: {{ trip.request_id }} - Driver: {{ trip.driver }} - Pickup: {{ trip.start_district }} - Dropoff: {{ trip.end_district }} - Distance: {{ trip.distance }} km - Cost: {{ trip.total_cost }} UGX - Status: {{ trip.status }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

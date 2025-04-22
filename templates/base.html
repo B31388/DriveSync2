@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DriveSync{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #1E3A8A; /* Dark navy blue */
+            color: #F3F4F6; /* Light gray */
+        }
+        .btn {
+            background-color: #2DD4BF; /* Teal accent */
+            color: #1E3A8A;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #26A69A;
+        }
+        .card {
+            background-color: #2B468B; /* Slightly lighter navy */
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <nav class="bg-gray-900 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{{ url_for('core.index') }}" class="text-2xl font-bold text-white">DriveSync</a>
+            <div>
+                {% if session.admin_logged_in %}
+                    <a href="{{ url_for('core.admin_dashboard') }}" class="text-white mx-2">Admin Dashboard</a>
+                    <a href="{{ url_for('core.logout') }}" class="text-white mx-2">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('core.login') }}" class="text-white mx-2">Admin Login</a>
+                {% endif %}
+                <a href="{{ url_for('core.client_request') }}" class="text-white mx-2">Client Request</a>
+            </div>
+        </div>
+    </nav>
+    <main class="container mx-auto p-4 flex-grow">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="bg-{{ 'green' if category == 'success' else 'red' }}-500 text-white p-4 rounded mb-4">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="bg-gray-900 text-white text-center p-4">
+        © 2025 DriveSync. All rights reserved.
+    </footer>
+</body>
+</html>
