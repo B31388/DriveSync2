@@ -3,6 +3,11 @@ from uuid import uuid4
 from abc import ABC, abstractmethod
 from email_validator import validate_email, EmailNotValidError
 import re
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # Dictionary of major Ugandan districts with approximate coordinates (latitude, longitude)
 UGANDA_DISTRICTS = {
@@ -75,6 +80,8 @@ class Vehicle:
     def __init__(self, registration_number, vehicle_type, fuel_per_km):
         self._registration_number = registration_number
         self._vehicle_type = vehicle_type
+        if not isinstance(fuel_per_km, (int, float)) or fuel_per_km <= 0:
+            raise ValueError("Fuel per km must be a positive number")
         self._fuel_per_km = fuel_per_km
         self._assigned_driver = None
 
@@ -270,20 +277,28 @@ class Trip:
         return f"Trip {self._request._request_id} completed by {self._driver.name}"
 
     def set_fuel_price(self, fuel_price):
+        if not isinstance(fuel_price, (int, float)) or fuel_price <= 0:
+            raise ValueError("Fuel price must be a positive number")
         self._fuel_price = fuel_price
         self._total_cost = self.calculate_cost()
 
     def _calculate_distance(self):
         try:
-            return geodesic(self._start_location, self._end_location).kilometers
+            logger.debug(f"Calculating distance between {self._start_location} and {self._end_location}")
+            distance = geodesic(self._start_location, self._end_location).kilometers
+            logger.debug(f"Distance calculated: {distance} km")
+            return distance
         except Exception as e:
-            print(f"Distance calculation error: {e}")
+            logger.error(f"Distance calculation error: {e}")
             return 0
 
     def calculate_cost(self):
         if not self._fuel_price or not self._fuel_per_km:
+            logger.warning(f"Cannot calculate cost: fuel_price={self._fuel_price}, fuel_per_km={self._fuel_per_km}")
             return 0
-        return self._distance * self._fuel_per_km * self._fuel_price
+        cost = self._distance * self._fuel_per_km * self._fuel_price
+        logger.debug(f"Cost calculated: distance={self._distance} km, fuel_per_km={self._fuel_per_km}, fuel_price={self._fuel_price}, cost={cost} UGX")
+        return cost
 
     @property
     def distance(self):
